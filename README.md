@@ -93,5 +93,22 @@ A standalone distribution of the application can be created with
 ./gradlew :quakeinfo:distZip
 ```
 
+### quakemap
+
+This JavaFX application plots quake event locations on a map projection.
+A tooltip is created for each plotted point, contain details of the
+associated quake.
+
+For testing purposes, you can run the application from Gradle:
+```shell
+./gradlew :quakemap:run
+```
+
+This will supply a fixed values for severity level and period as command
+line arguments. You can specify your own arguments like so:
+```shell
+./gradlew :quakemap:run --args="4.5 week"
+```
+
 [usgs]: https://earthquake.usgs.gov/earthquakes/feed/
 [clikt]: https://ajalt.github.io/clikt/
