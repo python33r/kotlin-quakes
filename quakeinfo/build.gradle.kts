@@ -22,5 +22,5 @@ application {
 }
 
 tasks.named<JavaExec>("run") {
-    args = listOf("--summary", "--table", "--by", "-mag", "4.5", "week")
+    args = listOf("--summary", "--table", "--order", "-mag", "4.5", "day")
 }

@@ -19,8 +19,7 @@ class QuakeInfo: CliktCommand(
 ) {
     val summary by option("-s", "--summary").flag().help("Display summary statistics")
     val table by option("-t", "--table").flag().help("Display table of quake details")
-    val ordering by option("-b", "--by")
-        .choice("+depth", "-depth", "+mag", "-mag")
+    val ordering by option("-o", "--order").choice("+depth", "-depth", "+mag", "-mag")
         .help("Sort order for quake details")
     val level by argument("level").help("Severity level of quake feed")
     val period by argument("period").help("Time period of quake feed")
