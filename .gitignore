@@ -1,0 +1,10 @@
+# Directories
+.gradle/
+.idea/
+.vscode/
+build/
+out/
+bin/
+
+# Files
+.DS_Store
