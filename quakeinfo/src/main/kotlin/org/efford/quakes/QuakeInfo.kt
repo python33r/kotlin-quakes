@@ -2,9 +2,7 @@ package org.efford.quakes
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
-import com.github.ajalt.clikt.parameters.arguments.help
 import com.github.ajalt.clikt.parameters.options.flag
-import com.github.ajalt.clikt.parameters.options.help
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 
@@ -17,12 +15,13 @@ class QuakeInfo: CliktCommand(
     name="quakeinfo",
     help="Extracts information from a USGS earthquake data feed."
 ) {
-    val summary by option("-s", "--summary").flag().help("Display summary statistics")
-    val table by option("-t", "--table").flag().help("Display table of quake details")
-    val ordering by option("-o", "--order").choice("+depth", "-depth", "+mag", "-mag")
-        .help("Sort order for quake details")
-    val level by argument("level").help("Severity level of quake feed")
-    val period by argument("period").help("Time period of quake feed")
+    val summary by option("-s", "--summary", help="Display summary statistics").flag()
+    val table by option("-t", "--table", help="Display table of quake details").flag()
+    val ordering by option("-o", "--order", help="Sort order for quake details")
+        .choice("+depth", "-depth", "+mag", "-mag")
+
+    val level by argument("level", help="Severity level of quake feed")
+    val period by argument("period", help="Time period of quake feed")
 
     override fun run() {
         val feed = QuakeFeed(level, period)
