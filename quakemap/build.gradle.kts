@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    id("org.openjfx.javafxplugin") version "0.1.0"
     application
 }
 
@@ -9,11 +10,15 @@ repositories {
 
 dependencies {
     implementation(project(":lib"))
-    implementation("com.github.ajalt.clikt:clikt:4.4.0")
 }
 
 kotlin {
     jvmToolchain(21)
+}
+
+javafx {
+    version = "22.0.1"
+    modules = listOf("javafx.controls")
 }
 
 application {
@@ -21,5 +26,5 @@ application {
 }
 
 tasks.named<JavaExec>("run") {
-    args = listOf("--summary", "--table", "--order", "-mag", "4.5", "day")
+    args = listOf("4.5", "week")
 }
