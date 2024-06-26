@@ -14,8 +14,8 @@ class QuakeFeedTest: StringSpec({
         withClue("Period") { feed.period shouldBe "week" }
     }
 
-    "String representation is the source URL" {
-        feed.toString() shouldBe "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.csv"
+    "String representation shows level & period values" {
+        feed.toString() shouldBe """QuakeFeed(level="4.5", period="week")"""
     }
 
     "Exception if severity level is invalid" {

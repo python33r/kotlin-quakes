@@ -42,7 +42,7 @@ class QuakeFeed(val level: String, val period: String) {
      *
      * @return Feed as a string
      */
-    override fun toString() = source.toString()
+    override fun toString() = """QuakeFeed(level="$level", period="$period")"""
 
     /**
      * Reads the entire contents of this feed.
