@@ -73,8 +73,9 @@ as shown in the second and third examples.
 ### quakeinfo
 
 This terminal-based application extracts information from a USGS data feed.
-It can print summary statistics for the captured data or print a table of
-quake details (or both). The application has a command line UI, implemented
+It can print summary statistics for the captured data, print a table of
+quake details, or write the captured data to a CSV file (or any combination
+of those three operations). The application has a command line UI, implemented
 with [Clikt][clikt].
 
 For testing purposes, you can run the application from Gradle:
