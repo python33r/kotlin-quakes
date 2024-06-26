@@ -25,8 +25,8 @@ class QuakeDataset {
     fun update(feed: QuakeFeed) {
         with(feed.read()) {
             quakes.clear()
+            // Iterate over all non-blank lines, skipping header
             lineSequence().drop(1).filter { it.isNotBlank() }.forEach {
-                // Skip header, process remaining non-blank lines
                 addRecordFor(it)
             }
         }
@@ -95,31 +95,43 @@ class QuakeDataset {
 
     /**
      * Shallowest quake in this dataset
+     *
+     * This will be `null` if the dataset is empty.
      */
     val shallowestQuake get() = quakes.minByOrNull { it.depth }
 
     /**
      * Deepest quake in this dataset
+     *
+     * This will be `null` if the dataset is empty.
      */
     val deepestQuake get() = quakes.maxByOrNull { it.depth }
 
     /**
      * Weakest quake in this dataset
+     *
+     * This will be `null` if the dataset is empty.
      */
     val weakestQuake get() = quakes.minByOrNull { it.magnitude }
 
     /**
      * Strongest quake in this dataset
+     *
+     * This will be `null` if the dataset is empty.
      */
     val strongestQuake get() = quakes.maxByOrNull { it.magnitude }
 
     /**
      * Mean depth (km) of quakes in this dataset
+     *
+     * This will be `null` if the dataset is empty.
      */
     val meanDepth get() = if (size > 0) quakes.map { it.depth }.average() else null
 
     /**
      * Mean magnitude of quakes in this dataset
+     *
+     * This will be `null` if the dataset is empty.
      */
     val meanMagnitude get() = if (size > 0) quakes.map { it.magnitude }.average() else null
 }

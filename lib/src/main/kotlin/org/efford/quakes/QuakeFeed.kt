@@ -4,7 +4,7 @@ import java.net.URI
 import java.net.URL
 
 /**
- * A USGS Earthquake Hazards Program quake data feed.
+ * A USGS Earthquake Hazards Program data feed.
  *
  * The appropriate feed URL is constructed by specifying a severity
  * level ("all", "1.0", "2.5", "4.5", "significant") and a time
@@ -18,7 +18,10 @@ import java.net.URL
 class QuakeFeed(val level: String, val period: String) {
 
     companion object {
+        /** Severity levels for which there is a USGS data feed */
         val validLevels = setOf("all", "1.0", "2.5", "4.5", "significant")
+
+        /** Time periods for which there is a USGS data feed */
         val validPeriods = setOf("hour", "day", "week", "month")
     }
 
@@ -33,6 +36,9 @@ class QuakeFeed(val level: String, val period: String) {
 
     /**
      * Feed URL
+     *
+     * This points to the USGS data feed (CSV version) that corresponds
+     * to the chosen `level` and `period` properties.
      */
     val source: URL = URI.create(
         "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/${level}_${period}.csv").toURL()
@@ -40,7 +46,7 @@ class QuakeFeed(val level: String, val period: String) {
     /**
      * Generates a string representation of this feed.
      *
-     * @return Feed as a string
+     * @return Feed details as a string
      */
     override fun toString() = """QuakeFeed(level="$level", period="$period")"""
 
