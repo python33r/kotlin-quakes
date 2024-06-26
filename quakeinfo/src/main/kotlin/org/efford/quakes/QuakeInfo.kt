@@ -30,7 +30,7 @@ class QuakeInfo: CliktCommand(
 
     override fun run() {
         val feed = QuakeFeed(level, period)
-        val data = QuakeDataset().apply { updateFrom(feed) }
+        val data = QuakeDataset().apply { update(feed) }
         if (summary) summarize(data)
         if (table) displayTable(data, ordering)
         file?.let { Files.write(it, csvLines(data)) }

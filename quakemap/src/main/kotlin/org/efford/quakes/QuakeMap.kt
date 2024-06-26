@@ -13,7 +13,7 @@ class QuakeMap: Application() {
         val period = parameters.unnamed[1]
 
         val feed = QuakeFeed(level, period)
-        val data = QuakeDataset().apply { updateFrom(feed) }
+        val data = QuakeDataset().apply { update(feed) }
 
         val pane = BorderPane().apply {
             padding = Insets(5.0, 5.0, 5.0, 5.0)

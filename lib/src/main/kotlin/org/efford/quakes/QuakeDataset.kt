@@ -22,7 +22,7 @@ class QuakeDataset {
      *
      * @param[feed] Source of the quake data
      */
-    fun updateFrom(feed: QuakeFeed) {
+    fun update(feed: QuakeFeed) {
         with(feed.read()) {
             quakes.clear()
             lineSequence().drop(1).filter { it.isNotBlank() }.forEach {

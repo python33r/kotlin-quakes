@@ -29,7 +29,7 @@ class QuakeDatasetTest: StringSpec({
         on { read() } doReturn dummyData
     }
 
-    val quakes = QuakeDataset().apply { updateFrom(dummyFeed) }
+    val quakes = QuakeDataset().apply { update(dummyFeed) }
 
     "Dataset is empty before updating" {
         withClue("Empty?") { empty.isEmpty() shouldBe true }
