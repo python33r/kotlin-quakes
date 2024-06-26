@@ -20,8 +20,10 @@ class QuakeInfo: CliktCommand(
     val ordering by option("-o", "--order", help="Sort order for quake details")
         .choice("+depth", "-depth", "+mag", "-mag")
 
-    val level by argument("level", help="Severity level of quake feed")
-    val period by argument("period", help="Time period of quake feed")
+    val level by argument("level", help="Severity level ${QuakeFeed.validLevels}")
+        .choice(*QuakeFeed.validLevels.toTypedArray())
+    val period by argument("period", help="Time period ${QuakeFeed.validPeriods}")
+        .choice(*QuakeFeed.validPeriods.toTypedArray())
 
     override fun run() {
         val feed = QuakeFeed(level, period)

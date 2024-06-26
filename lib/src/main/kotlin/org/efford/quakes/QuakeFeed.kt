@@ -18,8 +18,8 @@ import java.net.URL
 class QuakeFeed(val level: String, val period: String) {
 
     companion object {
-        private val validLevels = setOf("all", "1.0", "2.5", "4.5", "significant")
-        private val validPeriods = setOf("hour", "day", "week", "month")
+        val validLevels = setOf("all", "1.0", "2.5", "4.5", "significant")
+        val validPeriods = setOf("hour", "day", "week", "month")
     }
 
     init {
