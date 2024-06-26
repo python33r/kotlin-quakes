@@ -5,6 +5,8 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
+import com.github.ajalt.clikt.parameters.types.path
+import java.nio.file.Files
 
 /**
  * Program to extract information from a USGS earthquake data feed.
@@ -19,6 +21,7 @@ class QuakeInfo: CliktCommand(
     val table by option("-t", "--table", help="Display table of quake details").flag()
     val ordering by option("-o", "--order", help="Sort order for quake details")
         .choice("+depth", "-depth", "+mag", "-mag")
+    val file by option("-f", "--file", metavar="path", help="Output file for feed data").path()
 
     val level by argument("level", help="Severity level ${QuakeFeed.validLevels}")
         .choice(*QuakeFeed.validLevels.toTypedArray())
@@ -30,6 +33,7 @@ class QuakeInfo: CliktCommand(
         val data = QuakeDataset().apply { updateFrom(feed) }
         if (summary) summarize(data)
         if (table) displayTable(data, ordering)
+        file?.let { Files.write(it, csvLines(data)) }
     }
 
     private fun summarize(data: QuakeDataset) {
@@ -58,5 +62,15 @@ class QuakeInfo: CliktCommand(
 
     private fun echof(format: String, vararg args: Any) {
         echo(String.format(format, *args))
+    }
+
+    private fun csvLines(data: QuakeDataset) = buildList<String> {
+        add("time,longitude,latitude,depth,magnitude")
+        for (quake in data) {
+            with (quake) {
+                add(String.format("%s,%.4f,%.4f,%.2f,%.1f",
+                    time, longitude, latitude, depth, magnitude))
+            }
+        }
     }
 }
