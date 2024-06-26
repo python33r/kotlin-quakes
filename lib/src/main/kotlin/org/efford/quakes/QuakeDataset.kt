@@ -68,9 +68,12 @@ class QuakeDataset {
     operator fun get(index: Int) = quakes[index]
 
     /**
-     * Supports iteration over this dataset's quakes.
+     * Provides an iterator over this dataset's quakes.
      */
-    operator fun iterator() = quakes.iterator()
+    operator fun iterator(): Iterator<Quake> {
+        // Use asSequence() so that we avoid returning a MutableIterator
+        return quakes.asSequence().iterator()
+    }
 
     /**
      * Renders quake data as plain text in tabular form.
