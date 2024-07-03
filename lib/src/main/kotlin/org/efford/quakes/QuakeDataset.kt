@@ -97,6 +97,38 @@ class QuakeDataset {
     }
 
     /**
+     * Renders quake data as an HTML table.
+     *
+     * An `id` attribute for the table can optionally be provided,
+     * allowing for targeted styling via CSS.
+     *
+     * A `Comparator` object can optionally be provided to specify the
+     * order in which quakes are sorted in the table. The default sort is
+     * by ascending event time.
+     *
+     * @param[id] `id` attribute for the generated table
+     * @param[ordering] Comparator specifying sort order for quakes
+     * @return String containing tabulated quake data
+     */
+    fun asHtmlTable(
+        id: String = "",
+        ordering: Comparator<Quake> = compareBy { it.time }
+    ) = buildString {
+        appendLine(if (id.isNotBlank()) "<table id=\"$id\">" else "<table>")
+        appendLine("<thead>")
+        appendLine("<tr><th>Lon</th><th>Lat</th><th>Depth</th><th>Mag</th></tr>")
+        appendLine("</thead>")
+        appendLine("<tbody>")
+        quakes.sortedWith(ordering).forEach {
+            appendLine(String.format(
+                "<tr><td>%.4f</td><td>%.4f</td><td>%.2f</td><td>%.1f</td></tr>",
+                it.longitude, it.latitude, it.depth, it.magnitude))
+        }
+        appendLine("</tbody>")
+        appendLine("</table>")
+    }
+
+    /**
      * Shallowest quake in this dataset
      *
      * This will be `null` if the dataset is empty.
