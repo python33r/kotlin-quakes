@@ -24,30 +24,42 @@ for the past 7 days:
 ```kotlin
 val feed = QuakeFeed("4.5", "week")
 ```
+The sets of supported severity levels and time periods are accessible
+in `QuakeFeed`:
+```kotlin
+println(QuakeFeed.validLevels)
+println(QuakeFeed.validPeriods)
+``` 
 
 `QuakeDataset` represents a dataset collected from a feed. This starts
-off empty and must be populated by calling the `updateFrom()` method, with
-a feed as an argument:
+off empty and must be populated by calling the `update()` method, with A
+feed as an argument:
 ```kotlin
-val dataset = QuakeDataset().apply { updateFrom(feed) }
+val dataset = QuakeDataset().apply { update(feed) }
 ```
 
-`updateFrom()` can be invoked repeatedly thereafter, but note that each
-invocation will replace existing data with the latest contents of the given
-feed.
+`update()` can be invoked repeatedly thereafter, but note that each
+invocation will replace existing data with the latest contents of the
+given feed.
 
 A dataset is somewhat list-like: you can query its size, test whether it
 is empty or not, and access individual quake events by their position in
 the dataset. You can also iterate over the contents of the dataset using a
-for loop:
+for loop, or extract dataset contents to a regular Kotlin list:
 ```kotlin
 println("${dataset.size} quakes acquired")
 
 val first = dataset[0]
+
+for (quake in dataset) {
+    println(quake)
+}
+
+val quakeList = dataset.toList()
 ```
 
-You can also query a dataset to find the shallowest and deepest quakes,
-the weakest and strongest quakes, mean quake depth and mean quake magnitude.
+You can query a dataset to find the shallowest and deepest quakes, the
+weakest and strongest quakes, mean quake depth and mean quake magnitude.
 All of these queries return `null` if the dataset hasn't yet been populated
 from a feed.
 ```kotlin
@@ -67,6 +79,15 @@ The first of these examples displays quakes sorted by ascending event time,
 via a default `Comparator` object. You can easily plug in a different
 comparator, using Kotlin's `compareBy` & `compareByDescending` functions,
 as shown in the second and third examples.
+
+Quake details can be formatted as an HTML table if you prefer:
+```kotlin
+val table = dataset.asHtmlTable(id="quakes")
+```
+The optional `id` argument allows you to specify the `id` attribute of
+the generated table, thereby allowing targeting with specific CSS rules.
+Just as with `asTable()`, you can provide a `Comparator` object if
+the default sort order is not to your liking.
 
 ## Applications
 
@@ -96,8 +117,10 @@ A standalone distribution of the application can be created with
 
 ### quakemap
 
-This JavaFX application plots quake event locations on a map projection.
-A tooltip is created for each plotted point, contain details of the
+This JavaFX application plots quake event locations on a background image
+showing a relief map of the world, allowing you to see the close
+correspondence between seismic events and tectonic plate boundaries.
+A tooltip is created for each plotted point, containing details of the
 associated quake.
 
 For testing purposes, you can run the application from Gradle:
