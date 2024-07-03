@@ -63,17 +63,26 @@ class QuakeDataset {
      * Retrieves the quake at the given position in this dataset.
      *
      * @param[index] Position of the desired quake
-     * @return Quake object at the given index
+     * @return `Quake` object at the given index
      */
     operator fun get(index: Int) = quakes[index]
 
     /**
      * Provides an iterator over this dataset's quakes.
+     *
+     * @return `Quake` iterator
      */
     operator fun iterator(): Iterator<Quake> {
         // Use asSequence() so that we avoid returning a MutableIterator
         return quakes.asSequence().iterator()
     }
+
+    /**
+     * Creates a list containing this dataset's quakes.
+     *
+     * @return List of `Quake` objects
+     */
+    fun toList() = quakes.toList()
 
     /**
      * Renders quake data as plain text in tabular form.

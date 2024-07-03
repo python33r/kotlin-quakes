@@ -1,12 +1,19 @@
 package org.efford.quakes
 
+import java.nio.file.Files
+
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.path
-import java.nio.file.Files
+
+import com.github.ajalt.mordant.rendering.TextAlign.CENTER
+import com.github.ajalt.mordant.rendering.TextAlign.RIGHT
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.table.Borders.ALL
+import com.github.ajalt.mordant.table.table
 
 /**
  * Program to extract information from a USGS earthquake data feed.
@@ -18,9 +25,10 @@ class QuakeInfo: CliktCommand(
     help="Extracts information from a USGS earthquake data feed."
 ) {
     val summary by option("-s", "--summary", help="Display summary statistics").flag()
-    val table by option("-t", "--table", help="Display table of quake details").flag()
+    val details by option("-d", "--details", help="Display quake details as a table").flag()
     val ordering by option("-o", "--order", help="Sort order for quake details")
         .choice("+depth", "-depth", "+mag", "-mag")
+    val plain by option("-p", "--plain", help="Use plainer format for quake details").flag()
     val file by option("-f", "--file", metavar="path", help="Output file for feed data").path()
 
     val level by argument("level", help="Severity level ${QuakeFeed.validLevels}")
@@ -31,8 +39,14 @@ class QuakeInfo: CliktCommand(
     override fun run() {
         val feed = QuakeFeed(level, period)
         val data = QuakeDataset().apply { update(feed) }
+
         if (summary) summarize(data)
-        if (table) displayTable(data, ordering)
+
+        when {
+            details && plain -> displayPlainDetails(data, ordering)
+            details -> displayDetails(data, ordering)
+        }
+
         file?.let { Files.write(it, csvLines(data)) }
     }
 
@@ -49,7 +63,45 @@ class QuakeInfo: CliktCommand(
         }
     }
 
-    private fun displayTable(data: QuakeDataset, ordering: String?) {
+    private fun echof(format: String, vararg args: Any) {
+        echo(String.format(format, *args))
+    }
+
+    private fun displayDetails(data: QuakeDataset, ordering: String?) {
+        val comparison = when(ordering) {
+            "+depth" -> compareBy<Quake> { it.depth }
+            "-depth" -> compareByDescending<Quake> { it.depth }
+            "+mag" -> compareBy<Quake> { it.magnitude }
+            "-mag" -> compareByDescending<Quake> { it.magnitude }
+            else -> compareBy<Quake> { it.time }
+        }
+
+        val details = table {
+            tableBorders = ALL
+            align = RIGHT
+            header {
+                align = CENTER
+                style = TextStyle(bold = true)
+                row("Lon", "Lat", "Depth", "Mag")
+            }
+            body {
+                cellBorders = ALL
+                data.toList().sortedWith(comparison).forEach {
+                    row(
+                        String.format("%.4f", it.longitude),
+                        String.format("%.4f", it.latitude),
+                        String.format("%.2f", it.depth),
+                        String.format("%.1f", it.magnitude)
+                    )
+                }
+            }
+        }
+    
+        echo()
+        echo(details)
+    }
+
+    private fun displayPlainDetails(data: QuakeDataset, ordering: String?) {
         echo()
         echo(when(ordering) {
             "+depth" -> data.asTable(compareBy { it.depth })
@@ -58,10 +110,6 @@ class QuakeInfo: CliktCommand(
             "-mag" -> data.asTable(compareByDescending { it.magnitude })
             else -> data.asTable()
         })
-    }
-
-    private fun echof(format: String, vararg args: Any) {
-        echo(String.format(format, *args))
     }
 
     private fun csvLines(data: QuakeDataset) = buildList<String> {
