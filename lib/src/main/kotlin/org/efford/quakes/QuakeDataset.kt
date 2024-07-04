@@ -95,14 +95,14 @@ class QuakeDataset {
      * @return String containing tabulated quake data
      */
     fun asTable(ordering: Comparator<Quake> = compareBy { it.time }) = buildString {
-        appendLine("+-----------+----------+--------+-----+")
-        appendLine("|    Lon    |   Lat    |  Depth | Mag |")
-        appendLine("+-----------+----------+--------+-----+")
+        appendLine("+--------------------------+-----------+----------+--------+-----+")
+        appendLine("|           Time           |    Lon    |   Lat    |  Depth | Mag |")
+        appendLine("+--------------------------+-----------+----------+--------+-----+")
         quakes.sortedWith(ordering).forEach {
-            appendLine(String.format("| %9.4f | %8.4f | %6.2f | %3.1f |",
-                it.longitude, it.latitude, it.depth, it.magnitude))
+            appendLine(String.format("| %16s | %9.4f | %8.4f | %6.2f | %3.1f |",
+                it.time, it.longitude, it.latitude, it.depth, it.magnitude))
         }
-        appendLine("+-----------+----------+--------+-----+")
+        appendLine("+--------------------------+-----------+----------+--------+-----+")
     }
 
     /**
@@ -125,13 +125,13 @@ class QuakeDataset {
     ) = buildString {
         appendLine(if (id.isNotBlank()) "<table id=\"$id\">" else "<table>")
         appendLine("<thead>")
-        appendLine("<tr><th>Lon</th><th>Lat</th><th>Depth</th><th>Mag</th></tr>")
+        appendLine("<tr><th>Time</th><th>Lon</th><th>Lat</th><th>Depth</th><th>Mag</th></tr>")
         appendLine("</thead>")
         appendLine("<tbody>")
         quakes.sortedWith(ordering).forEach {
             appendLine(String.format(
-                "<tr><td>%.4f</td><td>%.4f</td><td>%.2f</td><td>%.1f</td></tr>",
-                it.longitude, it.latitude, it.depth, it.magnitude))
+                "<tr><td>%s</td><td>%.4f</td><td>%.4f</td><td>%.2f</td><td>%.1f</td></tr>",
+                it.time, it.longitude, it.latitude, it.depth, it.magnitude))
         }
         appendLine("</tbody>")
         appendLine("</table>")

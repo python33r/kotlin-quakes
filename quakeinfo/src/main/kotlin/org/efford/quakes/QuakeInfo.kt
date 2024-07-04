@@ -28,7 +28,7 @@ class QuakeInfo: CliktCommand(
     val details by option("-d", "--details", help="Display quake details as a table").flag()
     val ordering by option("-o", "--order", help="Sort order for quake details")
         .choice("+depth", "-depth", "+mag", "-mag")
-    val plain by option("-p", "--plain", help="Use plainer format for quake details").flag()
+    val plain by option("-p", "--plain", help="Use plain format for quake details").flag()
     val file by option("-f", "--file", metavar="path", help="Output file for feed data").path()
 
     val level by argument("level", help="Severity level ${QuakeFeed.validLevels}")
@@ -82,12 +82,13 @@ class QuakeInfo: CliktCommand(
             header {
                 align = CENTER
                 style = TextStyle(bold = true)
-                row("Lon", "Lat", "Depth", "Mag")
+                row("Time", "Lon", "Lat", "Depth", "Mag")
             }
             body {
                 cellBorders = ALL
                 data.toList().sortedWith(comparison).forEach {
                     row(
+                        String.format("%s", it.time),
                         String.format("%.4f", it.longitude),
                         String.format("%.4f", it.latitude),
                         String.format("%.2f", it.depth),
