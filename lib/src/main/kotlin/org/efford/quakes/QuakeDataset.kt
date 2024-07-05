@@ -99,7 +99,7 @@ class QuakeDataset {
         appendLine("|           Time           |    Lon    |   Lat    |  Depth | Mag |")
         appendLine("+--------------------------+-----------+----------+--------+-----+")
         quakes.sortedWith(ordering).forEach {
-            appendLine(String.format("| %16s | %9.4f | %8.4f | %6.2f | %3.1f |",
+            appendLine(String.format("| %-24s | %9.4f | %8.4f | %6.2f | %3.1f |",
                 it.time, it.longitude, it.latitude, it.depth, it.magnitude))
         }
         appendLine("+--------------------------+-----------+----------+--------+-----+")

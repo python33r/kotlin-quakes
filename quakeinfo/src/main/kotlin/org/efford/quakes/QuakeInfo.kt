@@ -10,6 +10,7 @@ import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.path
 
 import com.github.ajalt.mordant.rendering.TextAlign.CENTER
+import com.github.ajalt.mordant.rendering.TextAlign.LEFT
 import com.github.ajalt.mordant.rendering.TextAlign.RIGHT
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.table.Borders.ALL
@@ -86,6 +87,9 @@ class QuakeInfo: CliktCommand(
             }
             body {
                 cellBorders = ALL
+                column(0) {
+                    align = LEFT
+                }
                 data.toList().sortedWith(comparison).forEach {
                     row(
                         String.format("%s", it.time),
